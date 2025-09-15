@@ -13,6 +13,11 @@ const DropdownElement = ({
   const [selected, setSelected] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  /**
+   * Handle changes to the checkbox inputs.
+   * @param value The value of the checkbox.
+   * @param isChecked Whether the checkbox is checked or not.
+   */
   const handleCheckboxChange = (value: string, isChecked: boolean) => {
     const newSelected = isChecked
       ? [...new Set([...selected, value])]
@@ -22,19 +27,32 @@ const DropdownElement = ({
     onChange(newSelected);
   };
 
+  /**
+   * triggered by the first dropdown option which resets all selections
+   */
   const handleReset = () => {
     setSelected([]);
     onChange([]);
   };
 
+  /**
+   * Handle changes to the search input that filters the dropdown options.
+   */
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
+  /**
+   * triggered by the clear button in the search input to reset the search term
+   */
   const clearSearch = () => {
     setSearchTerm("");
   };
 
+  /**
+   * Filter the dropdown options based on the search term.
+   * All values are converted to lowercase for easier and more robust filtering
+   */
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   );

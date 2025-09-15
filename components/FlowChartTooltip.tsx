@@ -14,6 +14,10 @@ const FlowChartTooltip = memo(({ data }: TooltipProps) => {
     left: 0,
   });
 
+  /**
+   * Handle mouse enter event to show tooltip and calculate its position.
+   * The tooltip is positioned above the node and centered horizontally.
+   */
   const handleMouseEnter = () => {
     if (nodeRef.current) {
       const rect = nodeRef.current.getBoundingClientRect();
@@ -25,6 +29,9 @@ const FlowChartTooltip = memo(({ data }: TooltipProps) => {
     setShowTooltip(true);
   };
 
+  /**
+   * Handle mouse leave event to hide tooltip.
+  */
   const handleMouseLeave = () => setShowTooltip(false);
 
   // Only use handles that are actually used

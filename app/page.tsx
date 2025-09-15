@@ -51,7 +51,10 @@ export default function Home() {
   >({});
 
   useEffect(() => {
-    console.log("Fetching color scheme for duration_per_role");
+    /**
+     * Fetch color scheme for the DFG nodes based on the initial panel ID.
+     * These effects run when the event log is uploaded.
+     */
     const fetchColorScheme = async () => {
       if (eventlogUploaded) {
         const response = await fetch(
@@ -63,16 +66,15 @@ export default function Home() {
         );
         if (response.ok) {
           const data = await response.json();
-
-          /*setColorMappings(prev => ({
-            ...prev,
-            "duration_per_role": data.colors
-          }));*/
           setColorMappings(data.colors);
         }
       }
     };
 
+    /**
+     * Fetch activity utilization data based on the initial panel ID.
+     * These effects run when the event log is uploaded.
+     */
     const fetchActivityUtilization = async () => {
       if (eventlogUploaded) {
         const response = await fetch(
@@ -93,6 +95,12 @@ export default function Home() {
     fetchActivityUtilization();
   }, [eventlogUploaded]);
 
+
+  /**
+   * Add a new analysis panel when the user clicks the "Add Analysis Panel" button.
+   * A new unique panel ID is generated, and a request is sent to the backend to create the panel.
+   * The new panel ID is added to the list of analysis instances.
+   */
   const addAnalysisInstance = () => {
     const panelId = uuidv4();
     fetch(`http://localhost:9090/add_panel?panel_id=${panelId}`, {
@@ -111,10 +119,19 @@ export default function Home() {
     setAnalysisInstances([...analysisInstances, panelId]);
   };
 
+  /**
+   * 
+   * @param index Index of the analysis panel to be removed.
+   * Index matches the last added panelId
+   * Remove an analysis panel when the user clicks the "Remove Analysis Panel" button.
+   */
   const removeAnalysisInstance = (index: number) => {
     setAnalysisInstances(analysisInstances.filter((_, i) => i !== index));
   };
 
+  /**
+   * Load the Plotly library for rendering charts.
+   */
   useEffect(() => {
     if (typeof window !== "undefined") {
       const plotlyScript = document.createElement("script");
@@ -128,6 +145,13 @@ export default function Home() {
     }
   }, []);
 
+  /**
+   * 
+   * @param file Uploaded event log file.
+   * Handle the event log file upload.
+   * Sends the file to the backend and updates the state with the received metadata and DFG.
+   * Also updates dropdown options for filtering analyses based on the uploaded data.
+   */
   const handleUpload = async (file: File) => {
     setIsLoading(true);
     const formData = new FormData();
@@ -175,6 +199,12 @@ export default function Home() {
     }
   };
 
+  /**
+   * 
+   * @param node Clicked node in the DFG.
+   * Handle node selection in the DFG.
+   * Sends the selected node information to the backend and updates the state with the received node details.
+   */
   const handleNodeSelect = async (node: Node) => {
     const response = await fetch(
       "http://localhost:9090/node_selection_detail",

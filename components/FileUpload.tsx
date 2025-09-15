@@ -6,10 +6,12 @@ import styles from "../styles/components/FileUpload.module.css";
 interface FileUploadProps {
   onUpload: (file: File) => void;
 }
-
 export default function FileUpload({ onUpload }: FileUploadProps) {
   const [file, setFile] = useState<File | null>(null);
 
+  /**
+   * trigger the file upload process when the upload button is clicked
+   */
   const handleUpload = () => {
     if (file) {
       onUpload(file);

@@ -29,6 +29,10 @@ const TableFilter = ({
   setShowColumnSelector,
   setAnalysisPanelControl,
 }: TableFilterProps) => {
+
+  /**
+   * handles the change of page to fit search results
+   */
   const handleSearchQueryChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -40,6 +44,12 @@ const TableFilter = ({
     [key: string]: { selectedRadio: string; filterValue: number | string };
   }>({});
 
+  /**
+   * @param columnName name of the numeric column being filtered
+   * @param selectedRadio the selected radio button value either >, < or =
+   * @param filterValue the value to filter by
+   * apply filters and notify parent component of changes
+   */
   const handleFilterChange = (
     columnName: string,
     selectedRadio: string,

@@ -1,3 +1,8 @@
+/**
+ * CustomEdge component for rendering edges with improved arrowheads and labels in React Flow.
+ * This component recreates the edge style of standard PM4Py diagrams
+ */
+
 import React from "react";
 import { EdgeProps, getBezierPath } from "reactflow";
 
@@ -40,7 +45,7 @@ const CustomEdge = ({
   const arrowX = targetX;
   const arrowY = targetY;
 
-  // Label offset logic
+  // Label offset logic so incoming and outgoing edges don't overlap
   const labelOffset = 16;
   const isLTR = targetX > sourceX;
   const labelTextX =

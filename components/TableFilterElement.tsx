@@ -18,10 +18,16 @@ const TableFilterElement = ({
   filterValue,
   onFilterChange,
 }: TableFilterElementProps) => {
+  /**
+   * handle change for comparison (>, <, =) selection change
+   */
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onFilterChange(columnName, event.target.value, filterValue);
   };
 
+  /**
+   * handle change for change in value to flter by
+   */
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onFilterChange(columnName, selectedRadio, event.target.value);
   };

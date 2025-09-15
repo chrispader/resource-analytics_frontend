@@ -17,6 +17,10 @@ const InfoPanel = ({ selectedAnalysis }: InfoPanelProps) => {
   const [analysisLabel, setAnalysisLabel] = useState("");
   const [options, setOptions] = useState<AnalysisType[]>([]);
 
+  /**
+   * Fetch analysis options and their info content from the backend when the component mounts.
+   * The fetched data is expected to be an array of objects with 'value', 'label', and 'info' properties.
+   */
   useEffect(() => {
     fetch("http://localhost:9090/infoPanel")
       .then((response) => response.json())
@@ -24,6 +28,9 @@ const InfoPanel = ({ selectedAnalysis }: InfoPanelProps) => {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
+  /**
+   * Update the info content and analysis label whenever the selected analysis changes.
+   */
   useEffect(() => {
     const selectedOption = options.find(
       (option) => option.value === selectedAnalysis

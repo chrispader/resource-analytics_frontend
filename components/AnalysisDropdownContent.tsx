@@ -53,6 +53,11 @@ const AnalysisDropdownContent = ({
   const [selectedRow, setSelectedRow] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [selectionSource, setSelectionSource] = useState<"plot" | "table" | null>(null);
 
+  /**
+   * Fetch analysis data whenever the selected analysis type or panel ID changes.
+   * Resets the data if "No Analysis" or "analysis_detail" is selected.
+   * Updates initial and selected headers based on the fetched data.
+   */
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedAnalysis || selectedAnalysis === "analysis_detail") {
@@ -79,6 +84,10 @@ const AnalysisDropdownContent = ({
     fetchData();
   }, [selectedAnalysis, setIsLoading]);
 
+  /**
+   * Parse the plot and big_plot JSON data whenever the data changes from the last request.
+   * Updates the parsedPlot and bigParsedPlot state variables.
+   */
   useEffect(() => {
     if (data?.plot) {
       try {
@@ -100,6 +109,10 @@ const AnalysisDropdownContent = ({
     }
   }, [data]);
 
+  /**
+   * 
+   * @param event Change event from the header checkbox.
+   */
   const handleHeaderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
     setSelectedHeaders((prevSelectedHeaders) => {
@@ -110,6 +123,11 @@ const AnalysisDropdownContent = ({
     });
   };
 
+  /**
+   * 
+   * @param event Change event from the "Select All" checkbox.
+   * Selects or deselects all columns in the table.
+   */
   const handleSelectAllChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { checked } = event.target;
     if (selectedHeaders.length === initialHeaders.length) {
@@ -122,6 +140,10 @@ const AnalysisDropdownContent = ({
     setCurrentPage(newPage);
   };
 
+  /**
+   * Filter the table data based on the search query.
+   * set all values to lowercase and check if any value includes the search query
+   */
   const filteredTableData = data?.table
     ? data.table.filter((row) =>
         initialHeaders.some((key) =>
@@ -130,6 +152,13 @@ const AnalysisDropdownContent = ({
       )
     : [];
 
+  /**
+   * Handle click events on the plot.
+   * @param event Click event from the plot.
+   * Highlights the corresponding row in the table based on the clicked data point.
+   * Matches the y-value of the clicked point with the selected headers in the table.
+   * If a match is found, updates the selectedRow and sets the selectionSource to "plot".
+   */
   const handlePlotClick = (event: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     if (!data?.table || !parsedPlot) return;
 
@@ -148,9 +177,8 @@ const AnalysisDropdownContent = ({
     }
   };
 
-  const totalPages = filteredTableData
-    ? Math.ceil(filteredTableData.length / rowsPerPage)
-    : 1;
+  // Calculate total pages for pagination by ensuring at least 1 page
+  const totalPages = filteredTableData ? Math.ceil(filteredTableData.length / rowsPerPage) : 1;
 
   return (
     <>

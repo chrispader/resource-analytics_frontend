@@ -11,6 +11,9 @@ const ActivityDetail = ({ nodeSelectData }: ActivityDetailProps) => {
   const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
   const [parsedPlot, setParsedPlot] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
 
+  /**
+   * Parse the plot JSON data when nodeSelectData changes.
+   */
   useEffect(() => {
     if (nodeSelectData?.plot) {
       try {

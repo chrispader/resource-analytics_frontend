@@ -26,6 +26,9 @@ interface AnalysisDropdownProps {
   setAnalysisSelected: (analysisSelected: boolean) => void;
 }
 
+/**
+ * Dropdown options for analysis selection.
+ */
 const options = [
   { value: "", label: "No Analysis" },
   { value: "", label: "Resource Allocation", disabled: true },
@@ -96,12 +99,20 @@ export default function AnalysisDropdown({
 
   const [isInitialRender, setIsInitialRender] = useState(true);
 
+  /**
+   * change Analysis Selection to "analysis_detail" when user clicks on a node in the DFG
+   */
   useEffect(() => {
     if (nodeSelectData && panelId === initialPanelId) {
       setSelectedAnalysis("analysis_detail");
     }
   }, [nodeSelectData, setSelectedAnalysis]);
 
+  /**
+   * Reset nodeSelectData when changing analysis from "analysis_detail" to another analysis
+   * to avoid displaying stale data in the detail panel.
+   * Only reset if the panelId matches the initialPanelId to ensure it only affects the relevant panel.
+   */
   useEffect(() => {
     if (selectedAnalysis !== "analysis_detail" && panelId === initialPanelId) {
       if (setNodeSelectData) {
@@ -110,6 +121,10 @@ export default function AnalysisDropdown({
     }
   }, [selectedAnalysis, setNodeSelectData]);
 
+  /**
+   * Fetch filtered analysis data whenever the selected filter values change considering the current state of the analysis filter.
+   * Skips the initial render as not all information may be available at this application state.
+   */
   useEffect(() => {
     const sendFilterData = async () => {
       try {

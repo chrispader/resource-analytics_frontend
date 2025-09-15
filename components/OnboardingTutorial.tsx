@@ -1,3 +1,7 @@
+/**
+ * Creates an onboarding tutorial using the Joyride library.
+ */
+
 import React, { useEffect, useState } from "react";
 import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 
@@ -18,6 +22,11 @@ const OnboardingTutorial: React.FC<OnboardingTutorialProps> = ({
 }) => {
   const [steps, setSteps] = useState<Step[]>([]);
 
+  /**
+   * Dynamically generate the steps for the onboarding tutorial based on the current state of the application.
+   * The steps are adjusted according to whether an event log has been uploaded, whether an analysis has been selected,
+   * and whether the analysis panel control is active.
+   */
   useEffect(() => {
     const dynamicSteps: Step[] = [];
 
@@ -94,17 +103,8 @@ const OnboardingTutorial: React.FC<OnboardingTutorialProps> = ({
           "This text input lets you search across the whole table. Both numbers and strings are supported.",
       });
     }
-    /*
-    // Step 9 – same condition
-    if (eventlogUploaded && analysisSelected && !analysisPanelControl) {
-      dynamicSteps.push({
-        target: ".searchTableNumber",
-        content: "You can filter by number of matches here.",
-      });
-    }*/
 
     setSteps(dynamicSteps);
-    //if (dynamicSteps.length > 0) setRun(true);
   }, [
     runOnboardingTutorial,
     eventlogUploaded,

@@ -63,6 +63,11 @@ const TableComponent: React.FC<TableComponentProps> = ({
   >(null);
   const hasJumpedToPlotSelection = useRef(false);
 
+  /**
+   * 
+   * @param event event from pagination size input
+   * checks if valid input was entered, otherwise reset to default of 10
+   */
   const handleRowsPerPageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -81,6 +86,11 @@ const TableComponent: React.FC<TableComponentProps> = ({
     }
   };
 
+  /**
+   * 
+   * @param event event from pagination size input
+   * checks if valid input was entered, otherwise reset to default of 10
+   */
   const handleRowsPerPageBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
 
@@ -89,10 +99,18 @@ const TableComponent: React.FC<TableComponentProps> = ({
     }
   };
 
+  /**
+   * 
+   * @param value value to check
+   * returns true if the value is numeric
+   */
   const isNumeric = (value: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     return !isNaN(value - parseFloat(value));
   };
 
+  /**
+   * whenever the initial headers or the current table data changes, update the numeric columns for filtering
+   */
   useEffect(() => {
     const numericColumns = initialHeaders.filter((key) =>
       currentTableData.some((row) => isNumeric(row[key]))
@@ -100,12 +118,22 @@ const TableComponent: React.FC<TableComponentProps> = ({
     setNumericColumns(numericColumns);
   }, [initialHeaders, currentTableData]);
 
+  /**
+   * 
+   * @param updatedFilters updated filter values from the TableFilter component
+   * updates the filters state whenever the filter values change in the TableFilter component
+   */
   const handleFiltersChange = (updatedFilters: {
     [key: string]: { selectedRadio: string; filterValue: number | string };
   }) => {
     setFilters(updatedFilters);
   };
 
+  /**
+   * 
+   * @param data data to filter
+   * applies the numeric filters to the current table data based on the data store in the session
+   */
   const applyFilters = (data: typeof currentTableData) => {
     return data.filter((row) => {
       return Object.entries(filters).every(
@@ -123,6 +151,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
 
   const filteredData = applyFilters(currentTableData);
 
+  /**
+   * whenever the selected row changes (from table or plot), update the selected row index and page accordingly
+   * ensures that the selected row is visible in the current page
+   */
   useEffect(() => {
     if (!selectedRow) {
       setSelectedRowIndex(null);
@@ -157,6 +189,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
     }
   }, [selectedRow, filteredData, rowsPerPage, selectionSource, currentPage]);
 
+  /**
+   * whenever the current page or rows per page changes, update the selected row index accordingly
+   * ensures that the selected row index is correct for the current page
+   */
   useEffect(() => {
     if (
       selectedRowAbsoluteIndex !== null &&

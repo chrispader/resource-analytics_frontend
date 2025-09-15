@@ -30,6 +30,12 @@ interface ReactFlowChartProps {
   activityUtilization: Record<string, number>;
 }
 
+/**
+ * 
+ * @param dfg Data flow graph from the backend
+ * transforms the unstructured backend dfg data into structured nodes and edges for React Flow
+ * custom handle ensure better edge flow with less overlaps
+ */
 function transformBackendData(dfg: { nodes: Node[]; edges: Edge[] }) {
   const nodes = dfg.nodes.map((n) => ({
     id: n.id,
@@ -71,7 +77,11 @@ function transformBackendData(dfg: { nodes: Node[]; edges: Edge[] }) {
   return { nodes, edges };
 }
 
-// Utility: map 0-100 utilization to white→red
+/**
+ * 
+ * @param utilization utilization percentage between 0 and 100
+ * maps a utilization percentage to a color between white (0%) and red (100%)
+ */
 function utilizationToColor(utilization: number) {
   // Clamp between 0 and 100
   const percent = Math.max(0, Math.min(100, utilization));
@@ -101,6 +111,9 @@ const ReactFlowChart = ({
     reactFlowInstanceRef.current = instance;
   };
 
+  /**
+   * fetch additional hover details for nodes on component mount
+   */
   useEffect(() => {
     async function fetchHoverDetails() {
       if (initialNodes.length > 0 && panelId) {
@@ -130,6 +143,9 @@ const ReactFlowChart = ({
     fetchHoverDetails();
   }, [initialNodes, panelId]);
 
+  /**
+   * Perform layout using ELK and set nodes and edges with proper handles whenever initialNodes or initialEdges change.
+   */
   useEffect(() => {
     async function load() {
       const raw = transformBackendData({
@@ -285,7 +301,7 @@ const ReactFlowChart = ({
         ...node.data,
         ...(hoverDetails[node.id] ? hoverDetails[node.id] : {}),
         color,
-        utilization, // Pass utilization to node
+        utilization,
       },
     };
   });
