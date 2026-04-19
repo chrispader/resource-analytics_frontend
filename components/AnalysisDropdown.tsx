@@ -247,7 +247,7 @@ export default function AnalysisDropdown({
             }}
           />
         </div>
-      </div> 
+      </div>
     </div>
   );
 }
