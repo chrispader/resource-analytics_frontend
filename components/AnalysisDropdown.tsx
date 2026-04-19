@@ -59,6 +59,7 @@ const options = [
   { value: "resource_role_time_distribution", label: "Role by Resource" },
   { value: "resource_time_distribution", label: "Activity by Resource" },
   { value: "role_time_distribution", label: "Activity by Role" },
+  { value: "resource_role_matrix", label: "Resource-Role Matrix" },
   { value: "", label: "Capacity Utilization", disabled: true },
   {
     value: "capacity_utilization_resource",
