@@ -55,6 +55,10 @@ const options = [
     value: "activity_resource_comparison_norm",
     label: "Duration per Activity and Resource (Heatmap)",
   },
+  {
+    value: "normalized_activity_resource_duration_matrix",
+    label: "Normalized Average Case Duration per Activity and Resource",
+  },
   { value: "", label: "Workload Distribution", disabled: true },
   { value: "resource_role_time_distribution", label: "Role by Resource" },
   { value: "resource_time_distribution", label: "Activity by Resource" },
