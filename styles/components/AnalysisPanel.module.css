@@ -7,3 +7,40 @@
 .removeButton {
   margin-left: 10px;
 }
+
+.evaluationPanel {
+  margin-top: 12px;
+  padding: 12px;
+  border-top: 1px solid darkgrey;
+}
+
+.evaluationTitle {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.evaluationHint {
+  margin: 0 0 12px;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.evaluationOutput {
+  margin: 0;
+  padding: 12px;
+  max-height: 480px;
+  overflow: auto;
+  background-color: #f5f5f5;
+  border: 1px solid darkgrey;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.evaluationPlaceholder {
+  margin: 0;
+  color: #666;
+  font-style: italic;
+}

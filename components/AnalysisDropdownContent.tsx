@@ -27,6 +27,8 @@ interface AnalysisDropdownContentProps {
   setAnalysisPanelControl: (analysisPanelControl: boolean) => void;
 }
 
+const RESOURCE_ROLE_MATRIX_EVALUATION = "resource_role_matrix_evaluation";
+
 const AnalysisDropdownContent = ({
   panelId,
   selectedAnalysis,
@@ -179,6 +181,10 @@ const AnalysisDropdownContent = ({
 
   // Calculate total pages for pagination by ensuring at least 1 page
   const totalPages = filteredTableData ? Math.ceil(filteredTableData.length / rowsPerPage) : 1;
+
+  if (selectedAnalysis === RESOURCE_ROLE_MATRIX_EVALUATION) {
+    return null;
+  }
 
   return (
     <>
