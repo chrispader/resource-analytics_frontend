@@ -19,6 +19,28 @@
   font-weight: 600;
 }
 
+.evaluationGroupTitle {
+  margin: 20px 0 12px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.evaluationSection {
+  margin-bottom: 16px;
+}
+
+.evaluationSectionTitle {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.evaluationSectionHint {
+  margin: 0 0 8px;
+  color: #444;
+  font-size: 0.85rem;
+}
+
 .evaluationHint {
   margin: 0 0 12px;
   color: #444;
