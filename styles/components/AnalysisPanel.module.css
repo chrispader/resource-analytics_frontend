@@ -66,3 +66,76 @@
   color: #666;
   font-style: italic;
 }
+
+.metricsTableWrapper {
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.metricsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.metricsTable th,
+.metricsTable td {
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.metricsTable th:first-child,
+.metricsTable td:first-child,
+.metricsTable th:nth-child(2),
+.metricsTable td:nth-child(2),
+.metricsTable th:nth-child(3),
+.metricsTable td:nth-child(3) {
+  text-align: left;
+}
+
+.metricsTable thead th {
+  background-color: #e8e8e8;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.metricsTable tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.metricsTable tbody tr:hover {
+  background-color: #eef2ff;
+}
+
+.metricsSortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+.metricsSortButton:hover {
+  color: #1a3a8a;
+}
+
+.metricsSortIdle {
+  opacity: 0.35;
+  font-size: 0.75rem;
+}
+
+.metricsSortActive {
+  font-size: 0.75rem;
+  color: #1a3a8a;
+}

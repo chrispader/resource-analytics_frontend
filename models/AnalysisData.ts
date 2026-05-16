@@ -1,6 +1,7 @@
 import type {
   PlotlyFigureJson,
   ResourceRoleMatrixEvaluationMatrix,
+  ResourceRoleMatrixEvaluations,
 } from "./ResourceRoleMatrixEvaluation";
 
 export interface AnalysisData {
@@ -10,4 +11,5 @@ export interface AnalysisData {
   plot?: string | PlotlyFigureJson;
   big_plot?: string;
   matrix?: ResourceRoleMatrixEvaluationMatrix;
+  evaluations?: ResourceRoleMatrixEvaluations;
 }

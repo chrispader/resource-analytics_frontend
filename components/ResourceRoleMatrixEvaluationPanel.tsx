@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import styles from "../styles/components/AnalysisPanel.module.css";
 import { AnalysisData } from "../models/AnalysisData";
 import type { PlotlyFigureJson } from "../models/ResourceRoleMatrixEvaluation";
+import OrderingMetricsTable from "./OrderingMetricsTable";
 
 interface EvaluationSectionProps {
   title: string;
@@ -58,8 +59,9 @@ export default function ResourceRoleMatrixEvaluationPanel({
 }: ResourceRoleMatrixEvaluationPanelProps) {
   const plot = useMemo(() => normalizePlot(data?.plot ?? null), [data?.plot]);
   const matrix = data?.matrix;
+  const evaluations = data?.evaluations;
 
-  const hasContent = Boolean(plot || matrix);
+  const hasContent = Boolean(plot || matrix || evaluations);
 
   if (!hasContent) {
     return (
@@ -69,6 +71,17 @@ export default function ResourceRoleMatrixEvaluationPanel({
 
   return (
     <>
+      {evaluations && (
+        <section className={styles.evaluationSection}>
+          <h2 className={styles.evaluationGroupTitle}>Ordering metrics</h2>
+          <p className={styles.evaluationSectionHint}>
+            Click a column header to sort. Includes orderings and random
+            baselines.
+          </p>
+          <OrderingMetricsTable evaluations={evaluations} />
+        </section>
+      )}
+
       {plot && (
         <EvaluationSection
           title="plot"
