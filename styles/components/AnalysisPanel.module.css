@@ -12,6 +12,11 @@
   margin-top: 12px;
   padding: 12px;
   border-top: 1px solid darkgrey;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .evaluationTitle {
@@ -27,6 +32,8 @@
 
 .evaluationSection {
   margin-bottom: 16px;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .evaluationSectionTitle {
@@ -68,12 +75,23 @@
 }
 
 .metricsTableWrapper {
+  display: block;
   margin-bottom: 20px;
+  width: 0;
+  min-width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
 }
 
 .metricsTable {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
 }

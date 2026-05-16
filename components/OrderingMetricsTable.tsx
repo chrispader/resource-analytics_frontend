@@ -139,7 +139,12 @@ export default function OrderingMetricsTable({
   ];
 
   return (
-    <div className={styles.metricsTableWrapper}>
+    <div
+      className={styles.metricsTableWrapper}
+      role="region"
+      aria-label="Ordering metrics table"
+      tabIndex={0}
+    >
       <table className={styles.metricsTable}>
         <thead>
           <tr>

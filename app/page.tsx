@@ -349,14 +349,29 @@ export default function Home() {
                 showProcessOverview ? "" : styles.rightPanelExpanded
               }`}
               aria-label="Analysis panels"
+              style={{
+                flex: showProcessOverview ? "0 0 70%" : "1 1 0",
+                maxWidth: showProcessOverview ? "70%" : "100%",
+              }}
             >
               {analysisInstances.map((panelId, idx) => (
                 <div
                   key={panelId}
                   className={styles.rightPanelElement}
-                  style={{
-                    maxWidth: analysisInstances.length > 1 ? "850px" : "none",
-                  }}
+                  style={
+                    analysisInstances.length > 1
+                      ? {
+                          flex: "0 0 850px",
+                          width: "850px",
+                          maxWidth: "850px",
+                          minWidth: 0,
+                        }
+                      : {
+                          flex: "1 1 0",
+                          maxWidth: "100%",
+                          minWidth: 0,
+                        }
+                  }
                 >
                   <AnalysisPanel
                     // Only the first panel is controlled
