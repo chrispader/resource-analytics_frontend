@@ -8,39 +8,13 @@ import {
   OrderingMetricsTableRow,
   ResourceRoleMatrixEvaluations,
 } from "../models/ResourceRoleMatrixEvaluation";
+import { buildOrderingRows } from "../lib/resourceRoleMatrixEvaluationCsv";
 
 type SortDirection = "asc" | "desc";
 
 type SortableColumn = keyof OrderingMetricsTableRow;
 
 const LABEL_COLUMNS: SortableColumn[] = ["ordering_key"];
-
-function buildOrderingRows(
-  evaluations: ResourceRoleMatrixEvaluations
-): OrderingMetricsTableRow[] {
-  const rows: OrderingMetricsTableRow[] = [];
-
-  for (const [orderingKey, metrics] of Object.entries(
-    evaluations.orderings ?? {}
-  )) {
-    rows.push({
-      ...metrics,
-      ordering_key: orderingKey,
-      source: "ordering",
-    });
-  }
-
-  evaluations.random_baselines?.forEach((metrics, index) => {
-    const orderingKey = metrics.variant || `baseline_${index}`;
-    rows.push({
-      ...metrics,
-      ordering_key: orderingKey,
-      source: "baseline",
-    });
-  });
-
-  return rows;
-}
 
 function formatColumnLabel(column: string): string {
   return column

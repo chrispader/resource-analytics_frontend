@@ -38,6 +38,7 @@ export default function Home() {
 
   const [runOnboardingTutorial, setRunOnboardingTutorial] = useState(false);
   const [eventlogUploaded, setEventlogUploaded] = useState(false);
+  const [eventLogFileName, setEventLogFileName] = useState("");
   const [analysisSelected, setAnalysisSelected] = useState(false);
   const [analysisPanelControl, setAnalysisPanelControl] = useState(true);
   const [firstSelectedAnalysis, setFirstSelectedAnalysis] =
@@ -168,6 +169,11 @@ export default function Home() {
       );
       const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to upload event log");
+      }
+
+      setEventLogFileName(file.name);
       setEventlogUploaded(true);
       setMetaData(data.table);
       setDropdownOptions({
@@ -391,6 +397,7 @@ export default function Home() {
                     }
                     setNodeSelectData={setNodeSelectData}
                     initialPanelId={initialPanelId}
+                    eventLogFileName={eventLogFileName}
                   />
                 </div>
               ))}

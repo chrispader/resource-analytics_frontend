@@ -9,6 +9,10 @@ import type {
   PlotlyFigureJson,
 } from "../models/ResourceRoleMatrixEvaluation";
 import OrderingMetricsTable from "./OrderingMetricsTable";
+import {
+  createEvaluationCsv,
+  evaluationCsvFileName,
+} from "../lib/resourceRoleMatrixEvaluationCsv";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -78,10 +82,12 @@ function MatrixComparison({
 
 interface ResourceRoleMatrixEvaluationPanelProps {
   data: AnalysisData | null;
+  eventLogFileName: string;
 }
 
 export default function ResourceRoleMatrixEvaluationPanel({
   data,
+  eventLogFileName,
 }: ResourceRoleMatrixEvaluationPanelProps) {
   const [leftOrdering, setLeftOrdering] =
     useState<PlotOrdering>("current");
@@ -94,10 +100,34 @@ export default function ResourceRoleMatrixEvaluationPanel({
     );
   }
 
+  const handleExport = () => {
+    const csv = createEvaluationCsv(eventLogFileName, data.evaluations!);
+    const blob = new Blob(["\uFEFF", csv], {
+      type: "text/csv;charset=utf-8",
+    });
+    const downloadUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = downloadUrl;
+    anchor.download = evaluationCsvFileName(eventLogFileName);
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 0);
+  };
+
   return (
     <>
       <section className={styles.evaluationSection}>
-        <h2 className={styles.evaluationGroupTitle}>Ordering metrics</h2>
+        <div className={styles.evaluationSectionHeader}>
+          <h2 className={styles.evaluationGroupTitle}>Ordering metrics</h2>
+          <button
+            type="button"
+            className={styles.evaluationExportButton}
+            onClick={handleExport}
+          >
+            Export CSV
+          </button>
+        </div>
         <p className={styles.evaluationSectionHint}>
           More saturated cells indicate better quality. For fragmentation,
           lower values are better. Click a column header to sort.

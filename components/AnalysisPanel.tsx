@@ -25,6 +25,7 @@ interface AnalysisPanelProps {
   setAnalysisPanelControl: (analysisPanelControl: boolean) => void;
   selectedAnalysis?: string; // made optional
   setSelectedAnalysis?: (analysis: string) => void; // made optional
+  eventLogFileName: string;
 }
 
 export default function AnalysisPanel({
@@ -38,6 +39,7 @@ export default function AnalysisPanel({
   setAnalysisPanelControl,
   selectedAnalysis,
   setSelectedAnalysis,
+  eventLogFileName,
 }: AnalysisPanelProps) {
   const [dropdownOptions] = useState(initialDropdownOptions);
 
@@ -89,7 +91,10 @@ export default function AnalysisPanel({
           <p className={panelStyles.evaluationTitle}>
             Resource-Role Matrix Evaluation
           </p>
-          <ResourceRoleMatrixEvaluationPanel data={data} />
+          <ResourceRoleMatrixEvaluationPanel
+            data={data}
+            eventLogFileName={eventLogFileName}
+          />
         </section>
       )}
       <AnalysisDropdownContent
