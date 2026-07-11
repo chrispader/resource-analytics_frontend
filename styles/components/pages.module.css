@@ -33,6 +33,11 @@
   display: none;
 }
 
+.uploadPanel {
+  flex: 1 1 100%;
+  width: 100%;
+}
+
 .rightPanel {
   flex: 1 1 0;
   width: 70%;

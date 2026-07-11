@@ -324,7 +324,7 @@ export default function Home() {
             id="processOverviewPanel"
             className={`${styles.leftPanel} ${
               showProcessOverview ? "" : styles.leftPanelHidden
-            }`}
+            } ${showUploadMenue ? styles.uploadPanel : ""}`}
             hidden={!showProcessOverview}
             aria-label="Process overview"
           >
@@ -349,7 +349,7 @@ export default function Home() {
               </div>
             )}
           </aside>
-          {metaData.length > 0 && (
+          {metaData.length > 0 && !showUploadMenue && (
             <div
               className={`${styles.rightPanel} ${
                 showProcessOverview ? "" : styles.rightPanelExpanded
