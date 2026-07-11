@@ -1,9 +1,8 @@
 import type {
-  FixedOrderingMatrices,
+  OrderingMetricBounds,
   PlotlyFigureJson,
-  ResourceRoleMatrixColorMetrics,
-  ResourceRoleMatrixEvaluationMatrix,
   ResourceRoleMatrixEvaluations,
+  PlotOrdering,
 } from "./ResourceRoleMatrixEvaluation";
 
 export interface AnalysisData {
@@ -12,12 +11,7 @@ export interface AnalysisData {
   table?: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
   plot?: string | PlotlyFigureJson;
   big_plot?: string;
-  resource_count?: number;
-  role_count?: number;
-  filled_cells?: number;
-  density?: number;
-  color_metrics?: ResourceRoleMatrixColorMetrics;
-  matrix?: ResourceRoleMatrixEvaluationMatrix;
-  matrices?: FixedOrderingMatrices;
   evaluations?: ResourceRoleMatrixEvaluations;
+  metric_bounds?: OrderingMetricBounds;
+  plots?: Record<PlotOrdering, PlotlyFigureJson>;
 }

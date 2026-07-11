@@ -1,21 +1,9 @@
-export type PlotlyFigureJson = Record<string, unknown>;
+import type { Config, Data, Layout } from "plotly.js";
 
-export interface ResourceRoleAssignment {
-  resource: string;
-  role: string;
-}
-
-export interface OrderingMatrix {
-  resources: string[];
-  roles: string[];
-  mapping: boolean[][];
-  z: number[][];
-  assignments: ResourceRoleAssignment[];
-}
-
-export interface ResourceRoleMatrixEvaluationMatrix extends OrderingMatrix {
-  table: Array<Record<string, unknown>>;
-  metrics: Record<string, unknown>;
+export interface PlotlyFigureJson {
+  data: Data[];
+  layout?: Partial<Layout>;
+  config?: Partial<Config>;
 }
 
 export type FixedOrdering =
@@ -24,7 +12,7 @@ export type FixedOrdering =
   | "degree_based"
   | "similarity_based";
 
-export type FixedOrderingMatrices = Record<FixedOrdering, OrderingMatrix>;
+export type PlotOrdering = FixedOrdering | "random_0";
 
 export interface OrderingEvaluation {
   variant: string;
@@ -41,14 +29,16 @@ export interface ResourceRoleMatrixEvaluations {
   random_baselines: OrderingEvaluation[];
 }
 
-export interface ResourceRoleMatrixColorMetrics {
-  min_delta_e: number;
-  mean_delta_e: number;
-  max_delta_e: number;
-  min_contrast_ratio: number;
-  empty_cell_contrast_ratio: number;
-  empty_cell_delta_e: number;
+export interface OrderingMetricBound {
+  lower: number;
+  upper: number;
+  higher_is_better: boolean;
 }
+
+export type OrderingMetricBounds = Record<
+  (typeof ORDERING_METRIC_COLUMNS)[number],
+  OrderingMetricBound
+>;
 
 export interface OrderingMetricsTableRow extends OrderingEvaluation {
   ordering_key: string;
@@ -64,13 +54,7 @@ export const ORDERING_METRIC_COLUMNS = [
 ] as const satisfies readonly (keyof OrderingEvaluation)[];
 
 export interface ResourceRoleMatrixEvaluationResponse {
-  resource_count: number;
-  role_count: number;
-  filled_cells: number;
-  density: number;
-  color_metrics: ResourceRoleMatrixColorMetrics;
-  plot: PlotlyFigureJson;
-  matrix: ResourceRoleMatrixEvaluationMatrix;
-  matrices: FixedOrderingMatrices;
   evaluations: ResourceRoleMatrixEvaluations;
+  metric_bounds: OrderingMetricBounds;
+  plots: Record<PlotOrdering, PlotlyFigureJson>;
 }

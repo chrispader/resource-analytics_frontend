@@ -77,11 +77,14 @@
 .metricsTableWrapper {
   display: block;
   margin-bottom: 20px;
+  height: 25vh;
+  min-height: 180px;
+  max-height: 320px;
   width: 0;
   min-width: 100%;
   max-width: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   border: 1px solid #ccc;
@@ -144,6 +147,14 @@
   text-align: inherit;
 }
 
+.metricsRange {
+  display: block;
+  margin-top: 2px;
+  color: #555;
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
 .metricsSortButton:hover {
   color: #1a3a8a;
 }
@@ -156,4 +167,49 @@
 .metricsSortActive {
   font-size: 0.75rem;
   color: #1a3a8a;
+}
+
+.matrixComparisonSection {
+  min-width: 0;
+}
+
+.matrixComparisonGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(460px, 1fr));
+  gap: 16px;
+  padding-bottom: 8px;
+  overflow-x: auto;
+}
+
+.matrixComparisonCard {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.matrixOrderingLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.matrixOrderingSelect {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  background: #fff;
+  font: inherit;
+}
+
+.matrixPlot {
+  width: 100%;
+  height: clamp(440px, 56vh, 820px);
+  min-width: 0;
 }

@@ -89,9 +89,6 @@ export default function AnalysisPanel({
           <p className={panelStyles.evaluationTitle}>
             Resource-Role Matrix Evaluation
           </p>
-          <p className={panelStyles.evaluationHint}>
-            Raw JSON from <code>/resource_role_matrix_evaluation</code>.
-          </p>
           <ResourceRoleMatrixEvaluationPanel data={data} />
         </section>
       )}

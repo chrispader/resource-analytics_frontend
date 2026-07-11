@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import styles from "../styles/components/AnalysisPanel.module.css";
 import {
   ORDERING_METRIC_COLUMNS,
+  OrderingMetricBounds,
   OrderingMetricsTableRow,
   ResourceRoleMatrixEvaluations,
 } from "../models/ResourceRoleMatrixEvaluation";
@@ -12,12 +13,7 @@ type SortDirection = "asc" | "desc";
 
 type SortableColumn = keyof OrderingMetricsTableRow;
 
-const LABEL_COLUMNS: SortableColumn[] = [
-  "ordering_key",
-  "variant",
-  "seed",
-  "source",
-];
+const LABEL_COLUMNS: SortableColumn[] = ["ordering_key"];
 
 function buildOrderingRows(
   evaluations: ResourceRoleMatrixEvaluations
@@ -88,10 +84,12 @@ function compareRowValues(
 
 interface OrderingMetricsTableProps {
   evaluations: ResourceRoleMatrixEvaluations;
+  metricBounds: OrderingMetricBounds;
 }
 
 export default function OrderingMetricsTable({
   evaluations,
+  metricBounds,
 }: OrderingMetricsTableProps) {
   const rows = useMemo(() => buildOrderingRows(evaluations), [evaluations]);
 
@@ -143,6 +141,31 @@ export default function OrderingMetricsTable({
     ...ORDERING_METRIC_COLUMNS,
   ];
 
+  const metricCellStyle = (
+    column: SortableColumn,
+    value: unknown
+  ): React.CSSProperties | undefined => {
+    if (typeof value !== "number" || column === "ordering_key") {
+      return undefined;
+    }
+
+    const bound = metricBounds[column as keyof OrderingMetricBounds];
+    if (!bound) {
+      return undefined;
+    }
+
+    const span = bound.upper - bound.lower;
+    const normalized = span === 0 ? 1 : (value - bound.lower) / span;
+    const clamped = Math.min(1, Math.max(0, normalized));
+    const quality = bound.higher_is_better ? clamped : 1 - clamped;
+
+    return {
+      backgroundColor: `hsl(142 ${Math.round(58 * quality)}% ${Math.round(
+        100 - 28 * quality
+      )}%)`,
+    };
+  };
+
   return (
     <div
       className={styles.metricsTableWrapper}
@@ -160,7 +183,22 @@ export default function OrderingMetricsTable({
                   className={styles.metricsSortButton}
                   onClick={() => handleSort(column)}
                 >
-                  {formatColumnLabel(column)}
+                  <span>
+                    {formatColumnLabel(column)}
+                    {column !== "ordering_key" && (
+                      <small className={styles.metricsRange}>
+                        {formatCellValue(
+                          metricBounds[column as keyof OrderingMetricBounds]
+                            .lower
+                        )}
+                        {" – "}
+                        {formatCellValue(
+                          metricBounds[column as keyof OrderingMetricBounds]
+                            .upper
+                        )}
+                      </small>
+                    )}
+                  </span>
                   {renderSortIndicator(column)}
                 </button>
               </th>
@@ -171,7 +209,12 @@ export default function OrderingMetricsTable({
           {sortedRows.map((row) => (
             <tr key={`${row.source}-${row.ordering_key}`}>
               {allColumns.map((column) => (
-                <td key={column}>{formatCellValue(row[column])}</td>
+                <td
+                  key={column}
+                  style={metricCellStyle(column, row[column])}
+                >
+                  {formatCellValue(row[column])}
+                </td>
               ))}
             </tr>
           ))}

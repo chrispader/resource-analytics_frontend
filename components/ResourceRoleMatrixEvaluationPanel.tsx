@@ -1,51 +1,77 @@
-import { useMemo } from "react";
+"use client";
+
+import dynamic from "next/dynamic";
+import { useMemo, useState } from "react";
 import styles from "../styles/components/AnalysisPanel.module.css";
 import { AnalysisData } from "../models/AnalysisData";
-import type { PlotlyFigureJson } from "../models/ResourceRoleMatrixEvaluation";
+import type {
+  PlotOrdering,
+  PlotlyFigureJson,
+} from "../models/ResourceRoleMatrixEvaluation";
 import OrderingMetricsTable from "./OrderingMetricsTable";
 
-interface EvaluationSectionProps {
-  title: string;
-  description?: string;
-  value: unknown;
+const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+
+const ORDERING_OPTIONS: Array<{ value: PlotOrdering; label: string }> = [
+  { value: "current", label: "Current" },
+  { value: "alphabetical", label: "Alphabetical" },
+  { value: "degree_based", label: "Degree based" },
+  { value: "similarity_based", label: "Similarity based" },
+  { value: "random_0", label: "Random (seed 0)" },
+];
+
+interface MatrixComparisonProps {
+  label: string;
+  ordering: PlotOrdering;
+  onOrderingChange: (ordering: PlotOrdering) => void;
+  plots: Record<PlotOrdering, PlotlyFigureJson>;
 }
 
-function formatJson(value: unknown): string {
-  return JSON.stringify(value, null, 2);
-}
-
-function normalizePlot(
-  plot: AnalysisData["plot"] | null
-): PlotlyFigureJson | string | null {
-  if (!plot) {
-    return null;
-  }
-
-  if (typeof plot === "string") {
-    try {
-      return JSON.parse(plot) as PlotlyFigureJson;
-    } catch {
-      return plot;
-    }
-  }
-
-  return plot;
-}
-
-function EvaluationSection({
-  title,
-  description,
-  value,
-}: EvaluationSectionProps) {
-  const jsonText = useMemo(() => formatJson(value), [value]);
+function MatrixComparison({
+  label,
+  ordering,
+  onOrderingChange,
+  plots,
+}: MatrixComparisonProps) {
+  const plot = plots[ordering];
+  const layout = useMemo(
+    () => ({
+      ...(plot.layout ?? {}),
+      autosize: true,
+      width: undefined,
+      height: undefined,
+    }),
+    [plot]
+  );
 
   return (
-    <article className={styles.evaluationSection}>
-      <h3 className={styles.evaluationSectionTitle}>{title}</h3>
-      {description && (
-        <p className={styles.evaluationSectionHint}>{description}</p>
-      )}
-      <pre className={styles.evaluationOutput}>{jsonText}</pre>
+    <article className={styles.matrixComparisonCard}>
+      <label className={styles.matrixOrderingLabel}>
+        {label}
+        <select
+          className={styles.matrixOrderingSelect}
+          value={ordering}
+          onChange={(event) =>
+            onOrderingChange(event.target.value as PlotOrdering)
+          }
+        >
+          {ORDERING_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <div className={styles.matrixPlot}>
+        <Plot
+          key={ordering}
+          data={plot.data}
+          layout={layout}
+          config={{ ...(plot.config ?? {}), responsive: true }}
+          style={{ width: "100%", height: "100%" }}
+          useResizeHandler
+        />
+      </div>
     </article>
   );
 }
@@ -57,33 +83,12 @@ interface ResourceRoleMatrixEvaluationPanelProps {
 export default function ResourceRoleMatrixEvaluationPanel({
   data,
 }: ResourceRoleMatrixEvaluationPanelProps) {
-  const plot = useMemo(() => normalizePlot(data?.plot ?? null), [data?.plot]);
-  const matrix = data?.matrix;
-  const matrices = data?.matrices;
-  const evaluations = data?.evaluations;
-  const datasetMetrics =
-    data?.resource_count !== undefined &&
-    data.role_count !== undefined &&
-    data.filled_cells !== undefined &&
-    data.density !== undefined
-      ? {
-          resource_count: data.resource_count,
-          role_count: data.role_count,
-          filled_cells: data.filled_cells,
-          density: data.density,
-        }
-      : null;
+  const [leftOrdering, setLeftOrdering] =
+    useState<PlotOrdering>("current");
+  const [rightOrdering, setRightOrdering] =
+    useState<PlotOrdering>("similarity_based");
 
-  const hasContent = Boolean(
-    plot ||
-      datasetMetrics ||
-      data?.color_metrics ||
-      matrix ||
-      matrices ||
-      evaluations
-  );
-
-  if (!hasContent) {
+  if (!data?.evaluations || !data.metric_bounds || !data.plots) {
     return (
       <p className={styles.evaluationPlaceholder}>Loading evaluation data…</p>
     );
@@ -91,96 +96,35 @@ export default function ResourceRoleMatrixEvaluationPanel({
 
   return (
     <>
-      {datasetMetrics && (
-        <EvaluationSection
-          title="Dataset metrics"
-          description="Values shared by every matrix ordering."
-          value={datasetMetrics}
+      <section className={styles.evaluationSection}>
+        <h2 className={styles.evaluationGroupTitle}>Ordering metrics</h2>
+        <p className={styles.evaluationSectionHint}>
+          More saturated cells indicate better quality. For fragmentation,
+          lower values are better. Click a column header to sort.
+        </p>
+        <OrderingMetricsTable
+          evaluations={data.evaluations}
+          metricBounds={data.metric_bounds}
         />
-      )}
+      </section>
 
-      {data?.color_metrics && (
-        <EvaluationSection
-          title="Color metrics"
-          description="Visual encoding values shared by every matrix ordering."
-          value={data.color_metrics}
-        />
-      )}
-
-      {evaluations && (
-        <section className={styles.evaluationSection}>
-          <h2 className={styles.evaluationGroupTitle}>Ordering metrics</h2>
-          <p className={styles.evaluationSectionHint}>
-            Click a column header to sort. Includes orderings and random
-            baselines.
-          </p>
-          <OrderingMetricsTable evaluations={evaluations} />
-        </section>
-      )}
-
-      {plot && (
-        <EvaluationSection
-          title="plot"
-          description="Plotly figure JSON (data + layout)."
-          value={plot}
-        />
-      )}
-
-      {matrix && (
-        <>
-          <h2 className={styles.evaluationGroupTitle}>matrix</h2>
-
-          <EvaluationSection
-            title="matrix.roles"
-            description="Column labels (same order as z)."
-            value={matrix.roles}
+      <section className={styles.matrixComparisonSection}>
+        <h2 className={styles.evaluationGroupTitle}>Matrix comparison</h2>
+        <div className={styles.matrixComparisonGrid}>
+          <MatrixComparison
+            label="Left ordering"
+            ordering={leftOrdering}
+            onOrderingChange={setLeftOrdering}
+            plots={data.plots}
           />
-
-          <EvaluationSection
-            title="matrix.resources"
-            description="Row labels (same order as z)."
-            value={matrix.resources}
+          <MatrixComparison
+            label="Right ordering"
+            ordering={rightOrdering}
+            onOrderingChange={setRightOrdering}
+            plots={data.plots}
           />
-
-          <EvaluationSection
-            title="matrix.mapping"
-            description="Boolean assignment grid indexed by resource, then role."
-            value={matrix.mapping}
-          />
-
-          <EvaluationSection
-            title="matrix.z"
-            description="Cell values (0 = no assignment, j + 1 = role at column j)."
-            value={matrix.z}
-          />
-
-          <EvaluationSection
-            title="matrix.assignments"
-            description="Explicit resource–role pairs."
-            value={matrix.assignments}
-          />
-
-          <EvaluationSection
-            title="matrix.table"
-            description="Summary table (same as /resource_role_matrix)."
-            value={matrix.table}
-          />
-
-          <EvaluationSection
-            title="matrix.metrics"
-            description="Assignment counts."
-            value={matrix.metrics}
-          />
-        </>
-      )}
-
-      {matrices && (
-        <EvaluationSection
-          title="matrices"
-          description="Matrix data for each fixed ordering."
-          value={matrices}
-        />
-      )}
+        </div>
+      </section>
     </>
   );
 }
