@@ -12,7 +12,12 @@ type SortDirection = "asc" | "desc";
 
 type SortableColumn = keyof OrderingMetricsTableRow;
 
-const LABEL_COLUMNS: SortableColumn[] = ["ordering_key", "variant", "source"];
+const LABEL_COLUMNS: SortableColumn[] = [
+  "ordering_key",
+  "variant",
+  "seed",
+  "source",
+];
 
 function buildOrderingRows(
   evaluations: ResourceRoleMatrixEvaluations
@@ -133,7 +138,7 @@ export default function OrderingMetricsTable({
     );
   }
 
-  const allColumns: SortableColumn[] = [
+  const allColumns: readonly SortableColumn[] = [
     ...LABEL_COLUMNS,
     ...ORDERING_METRIC_COLUMNS,
   ];

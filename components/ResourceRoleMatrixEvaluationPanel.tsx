@@ -15,7 +15,7 @@ function formatJson(value: unknown): string {
 }
 
 function normalizePlot(
-  plot: AnalysisData["plot"]
+  plot: AnalysisData["plot"] | null
 ): PlotlyFigureJson | string | null {
   if (!plot) {
     return null;
@@ -59,9 +59,29 @@ export default function ResourceRoleMatrixEvaluationPanel({
 }: ResourceRoleMatrixEvaluationPanelProps) {
   const plot = useMemo(() => normalizePlot(data?.plot ?? null), [data?.plot]);
   const matrix = data?.matrix;
+  const matrices = data?.matrices;
   const evaluations = data?.evaluations;
+  const datasetMetrics =
+    data?.resource_count !== undefined &&
+    data.role_count !== undefined &&
+    data.filled_cells !== undefined &&
+    data.density !== undefined
+      ? {
+          resource_count: data.resource_count,
+          role_count: data.role_count,
+          filled_cells: data.filled_cells,
+          density: data.density,
+        }
+      : null;
 
-  const hasContent = Boolean(plot || matrix || evaluations);
+  const hasContent = Boolean(
+    plot ||
+      datasetMetrics ||
+      data?.color_metrics ||
+      matrix ||
+      matrices ||
+      evaluations
+  );
 
   if (!hasContent) {
     return (
@@ -71,6 +91,22 @@ export default function ResourceRoleMatrixEvaluationPanel({
 
   return (
     <>
+      {datasetMetrics && (
+        <EvaluationSection
+          title="Dataset metrics"
+          description="Values shared by every matrix ordering."
+          value={datasetMetrics}
+        />
+      )}
+
+      {data?.color_metrics && (
+        <EvaluationSection
+          title="Color metrics"
+          description="Visual encoding values shared by every matrix ordering."
+          value={data.color_metrics}
+        />
+      )}
+
       {evaluations && (
         <section className={styles.evaluationSection}>
           <h2 className={styles.evaluationGroupTitle}>Ordering metrics</h2>
@@ -107,6 +143,12 @@ export default function ResourceRoleMatrixEvaluationPanel({
           />
 
           <EvaluationSection
+            title="matrix.mapping"
+            description="Boolean assignment grid indexed by resource, then role."
+            value={matrix.mapping}
+          />
+
+          <EvaluationSection
             title="matrix.z"
             description="Cell values (0 = no assignment, j + 1 = role at column j)."
             value={matrix.z}
@@ -130,6 +172,14 @@ export default function ResourceRoleMatrixEvaluationPanel({
             value={matrix.metrics}
           />
         </>
+      )}
+
+      {matrices && (
+        <EvaluationSection
+          title="matrices"
+          description="Matrix data for each fixed ordering."
+          value={matrices}
+        />
       )}
     </>
   );

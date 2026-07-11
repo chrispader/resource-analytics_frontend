@@ -93,12 +93,15 @@ const AnalysisDropdownContent = ({
   useEffect(() => {
     if (data?.plot) {
       try {
-        const parsed = JSON.parse(data.plot);
+        const parsed =
+          typeof data.plot === "string" ? JSON.parse(data.plot) : data.plot;
         setParsedPlot(parsed);
       } catch (err) {
         console.error("Failed to parse plot JSON:", err);
         setParsedPlot(null);
       }
+    } else {
+      setParsedPlot(null);
     }
     if (data?.big_plot) {
       try {
@@ -108,6 +111,8 @@ const AnalysisDropdownContent = ({
         console.error("Failed to parse big plot JSON:", err);
         setBigParsedPlot(null);
       }
+    } else {
+      setBigParsedPlot(null);
     }
   }, [data]);
 
