@@ -17,7 +17,9 @@
 }
 
 .leftPanel {
+  flex: 0 0 30%;
   width: 30%;
+  min-width: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -25,14 +27,25 @@
   overflow: hidden;
 }
 
+.leftPanelHidden {
+  display: none;
+}
+
 .rightPanel {
+  flex: 1 1 70%;
   width: 70%;
+  min-width: 0;
   height: 100%;
   display: flex;
   flex-direction: row;
   overflow-x: auto;
   overflow-y: auto;
   white-space: nowrap;
+}
+
+.rightPanelExpanded {
+  flex-basis: 100%;
+  width: 100%;
 }
 
 .rightPanelElement {
@@ -52,6 +65,13 @@
 
 .buttonElement {
   margin-right: 10px;
+}
+
+.processOverviewToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .infoButton {
