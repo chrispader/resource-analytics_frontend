@@ -3,6 +3,7 @@ import type {
   PlotlyFigureJson,
   ResourceRoleMatrixEvaluations,
   PlotOrdering,
+  PlotlyHeuristicReport,
 } from "./ResourceRoleMatrixEvaluation";
 
 export interface AnalysisData {
@@ -14,4 +15,5 @@ export interface AnalysisData {
   evaluations?: ResourceRoleMatrixEvaluations;
   metric_bounds?: OrderingMetricBounds;
   plots?: Record<PlotOrdering, PlotlyFigureJson>;
+  heuristic_report?: PlotlyHeuristicReport;
 }

@@ -8,21 +8,15 @@ import type {
   PlotOrdering,
   PlotlyFigureJson,
 } from "../models/ResourceRoleMatrixEvaluation";
+import { RESOURCE_ROLE_ORDERING_OPTIONS } from "../models/ResourceRoleMatrixEvaluation";
 import OrderingMetricsTable from "./OrderingMetricsTable";
+import PlotlyHeuristicFindings from "./PlotlyHeuristicFindings";
 import {
   createEvaluationCsv,
   evaluationCsvFileName,
 } from "../lib/resourceRoleMatrixEvaluationCsv";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
-
-const ORDERING_OPTIONS: Array<{ value: PlotOrdering; label: string }> = [
-  { value: "current", label: "Current" },
-  { value: "alphabetical", label: "Alphabetical" },
-  { value: "degree_based", label: "Degree based" },
-  { value: "similarity_based", label: "Similarity based" },
-  { value: "random_0", label: "Random (seed 0)" },
-];
 
 interface MatrixComparisonProps {
   label: string;
@@ -59,7 +53,7 @@ function MatrixComparison({
             onOrderingChange(event.target.value as PlotOrdering)
           }
         >
-          {ORDERING_OPTIONS.map((option) => (
+          {RESOURCE_ROLE_ORDERING_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
@@ -94,7 +88,12 @@ export default function ResourceRoleMatrixEvaluationPanel({
   const [rightOrdering, setRightOrdering] =
     useState<PlotOrdering>("similarity_based");
 
-  if (!data?.evaluations || !data.metric_bounds || !data.plots) {
+  if (
+    !data?.evaluations ||
+    !data.metric_bounds ||
+    !data.plots ||
+    !data.heuristic_report
+  ) {
     return (
       <p className={styles.evaluationPlaceholder}>Loading evaluation data…</p>
     );
@@ -139,6 +138,8 @@ export default function ResourceRoleMatrixEvaluationPanel({
           metricBounds={data.metric_bounds}
         />
       </section>
+
+      <PlotlyHeuristicFindings report={data.heuristic_report} />
 
       <section className={styles.matrixComparisonSection}>
         <h2 className={styles.evaluationGroupTitle}>Matrix comparison</h2>

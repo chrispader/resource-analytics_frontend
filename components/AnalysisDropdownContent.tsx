@@ -6,6 +6,11 @@ import TableComponent from "./TableComponent";
 import { AnalysisData } from "../models/AnalysisData";
 import ActivityDetail from "./ActivityDetail";
 import dynamic from "next/dynamic";
+import panelStyles from "../styles/components/AnalysisPanel.module.css";
+import {
+  RESOURCE_ROLE_ORDERING_OPTIONS,
+  type PlotOrdering,
+} from "../models/ResourceRoleMatrixEvaluation";
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
@@ -28,6 +33,7 @@ interface AnalysisDropdownContentProps {
 }
 
 const RESOURCE_ROLE_MATRIX_EVALUATION = "resource_role_matrix_evaluation";
+const RESOURCE_ROLE_MATRIX = "resource_role_matrix";
 
 const AnalysisDropdownContent = ({
   panelId,
@@ -54,6 +60,8 @@ const AnalysisDropdownContent = ({
   const [bigParsedPlot, setBigParsedPlot] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [selectedRow, setSelectedRow] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [selectionSource, setSelectionSource] = useState<"plot" | "table" | null>(null);
+  const [selectedMatrixOrdering, setSelectedMatrixOrdering] =
+    useState<PlotOrdering>("current");
 
   /**
    * Fetch analysis data whenever the selected analysis type or panel ID changes.
@@ -91,10 +99,15 @@ const AnalysisDropdownContent = ({
    * Updates the parsedPlot and bigParsedPlot state variables.
    */
   useEffect(() => {
-    if (data?.plot) {
+    const plotSource =
+      selectedAnalysis === RESOURCE_ROLE_MATRIX && data?.plots
+        ? data.plots[selectedMatrixOrdering]
+        : data?.plot;
+
+    if (plotSource) {
       try {
         const parsed =
-          typeof data.plot === "string" ? JSON.parse(data.plot) : data.plot;
+          typeof plotSource === "string" ? JSON.parse(plotSource) : plotSource;
         setParsedPlot(parsed);
       } catch (err) {
         console.error("Failed to parse plot JSON:", err);
@@ -114,7 +127,7 @@ const AnalysisDropdownContent = ({
     } else {
       setBigParsedPlot(null);
     }
-  }, [data]);
+  }, [data, selectedAnalysis, selectedMatrixOrdering]);
 
   /**
    * 
@@ -229,6 +242,24 @@ const AnalysisDropdownContent = ({
               selectionSource={selectionSource}
               setSelectionSource={setSelectionSource}
             />
+          )}
+          {selectedAnalysis === RESOURCE_ROLE_MATRIX && data?.plots && (
+            <label className={panelStyles.matrixOrderingLabel}>
+              Matrix ordering
+              <select
+                className={panelStyles.matrixOrderingSelect}
+                value={selectedMatrixOrdering}
+                onChange={(event) =>
+                  setSelectedMatrixOrdering(event.target.value as PlotOrdering)
+                }
+              >
+                {RESOURCE_ROLE_ORDERING_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
           )}
           {data?.plot && parsedPlot && (
             <Plot
