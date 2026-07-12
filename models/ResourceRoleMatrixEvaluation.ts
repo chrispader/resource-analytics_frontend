@@ -22,6 +22,7 @@ export interface OrderingEvaluation {
   blockiness: number;
   row_fragmentation: number;
   column_fragmentation: number;
+  color_discriminability: number;
 }
 
 export interface ResourceRoleMatrixEvaluations {
@@ -51,6 +52,7 @@ export const ORDERING_METRIC_COLUMNS = [
   "blockiness",
   "row_fragmentation",
   "column_fragmentation",
+  "color_discriminability",
 ] as const satisfies readonly (keyof OrderingEvaluation)[];
 
 export interface ResourceRoleMatrixEvaluationResponse {

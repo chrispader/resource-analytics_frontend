@@ -13,6 +13,7 @@ const CSV_COLUMNS = [
   "blockiness",
   "row_fragmentation",
   "column_fragmentation",
+  "color_discriminability",
 ] as const;
 
 export function buildOrderingRows(
@@ -68,6 +69,7 @@ export function createEvaluationCsv(
         row.blockiness,
         row.row_fragmentation,
         row.column_fragmentation,
+        row.color_discriminability,
       ]
         .map(escapeCsvValue)
         .join(",")
