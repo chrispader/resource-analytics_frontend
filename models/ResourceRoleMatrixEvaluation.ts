@@ -7,7 +7,7 @@ export interface PlotlyFigureJson {
 }
 
 export type FixedOrdering =
-  | "current"
+  | "row_degree"
   | "alphabetical"
   | "degree_based"
   | "similarity_based";
@@ -18,7 +18,7 @@ export const RESOURCE_ROLE_ORDERING_OPTIONS: ReadonlyArray<{
   value: PlotOrdering;
   label: string;
 }> = [
-  { value: "current", label: "Current" },
+  { value: "row_degree", label: "Row degree" },
   { value: "alphabetical", label: "Alphabetical" },
   { value: "degree_based", label: "Degree based" },
   { value: "similarity_based", label: "Similarity based" },

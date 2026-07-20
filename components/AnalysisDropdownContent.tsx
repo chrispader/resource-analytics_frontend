@@ -61,7 +61,7 @@ const AnalysisDropdownContent = ({
   const [selectedRow, setSelectedRow] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [selectionSource, setSelectionSource] = useState<"plot" | "table" | null>(null);
   const [selectedMatrixOrdering, setSelectedMatrixOrdering] =
-    useState<PlotOrdering>("current");
+    useState<PlotOrdering>("row_degree");
 
   /**
    * Fetch analysis data whenever the selected analysis type or panel ID changes.

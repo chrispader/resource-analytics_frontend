@@ -84,7 +84,7 @@ export default function ResourceRoleMatrixEvaluationPanel({
   eventLogFileName,
 }: ResourceRoleMatrixEvaluationPanelProps) {
   const [leftOrdering, setLeftOrdering] =
-    useState<PlotOrdering>("current");
+    useState<PlotOrdering>("row_degree");
   const [rightOrdering, setRightOrdering] =
     useState<PlotOrdering>("similarity_based");
 
