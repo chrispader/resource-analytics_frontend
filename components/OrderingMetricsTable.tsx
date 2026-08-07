@@ -115,6 +115,14 @@ export default function OrderingMetricsTable({
     ...ORDERING_METRIC_COLUMNS,
   ];
 
+  const getMetricBound = (column: SortableColumn) => {
+    if (column === "ordering_key") {
+      return undefined;
+    }
+
+    return metricBounds[column as keyof OrderingMetricBounds];
+  };
+
   const metricCellStyle = (
     column: SortableColumn,
     value: unknown
@@ -123,7 +131,7 @@ export default function OrderingMetricsTable({
       return undefined;
     }
 
-    const bound = metricBounds[column as keyof OrderingMetricBounds];
+    const bound = getMetricBound(column);
     if (!bound) {
       return undefined;
     }
@@ -159,16 +167,14 @@ export default function OrderingMetricsTable({
                 >
                   <span>
                     {formatColumnLabel(column)}
-                    {column !== "ordering_key" && (
+                    {getMetricBound(column) && (
                       <small className={styles.metricsRange}>
                         {formatCellValue(
-                          metricBounds[column as keyof OrderingMetricBounds]
-                            .lower
+                          getMetricBound(column)?.lower
                         )}
                         {" – "}
                         {formatCellValue(
-                          metricBounds[column as keyof OrderingMetricBounds]
-                            .upper
+                          getMetricBound(column)?.upper
                         )}
                       </small>
                     )}

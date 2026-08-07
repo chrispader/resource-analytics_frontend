@@ -80,6 +80,20 @@
   font-size: 0.85rem;
 }
 
+.colorDiscriminabilityScore {
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f7fbf8;
+  color: #222;
+  font-size: 0.85rem;
+}
+
+.colorDiscriminabilityScore span {
+  color: #555;
+}
+
 .evaluationHint {
   margin: 0 0 12px;
   color: #444;

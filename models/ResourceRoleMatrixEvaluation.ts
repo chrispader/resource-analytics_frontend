@@ -33,10 +33,24 @@ export interface OrderingEvaluation {
   blockiness: number;
   row_fragmentation: number;
   column_fragmentation: number;
-  color_discriminability: number;
+}
+
+export interface ColorDiscriminabilityEvaluation {
+  score: number;
+  min_delta_e: number;
+  mean_delta_e: number;
+  max_delta_e: number;
+  min_contrast_ratio: number;
+  mean_contrast_ratio: number;
+  max_contrast_ratio: number;
 }
 
 export interface ResourceRoleMatrixEvaluations {
+  resource_count: number;
+  role_count: number;
+  filled_cells: number;
+  density: number;
+  color_discriminability: ColorDiscriminabilityEvaluation;
   orderings: Record<FixedOrdering, OrderingEvaluation>;
   random_baselines: OrderingEvaluation[];
 }
@@ -98,7 +112,6 @@ export const ORDERING_METRIC_COLUMNS = [
   "blockiness",
   "row_fragmentation",
   "column_fragmentation",
-  "color_discriminability",
 ] as const satisfies readonly (keyof OrderingEvaluation)[];
 
 export interface ResourceRoleMatrixEvaluationResponse {

@@ -129,9 +129,12 @@ export default function ResourceRoleMatrixEvaluationPanel({
         </div>
         <p className={styles.evaluationSectionHint}>
           More saturated cells indicate better quality. For fragmentation,
-          lower values are better. Color discriminability combines normalized
-          CIEDE2000 differences between every visible color into one 0–1 score.
-          Click a column header to sort.
+          lower values are better. Click a column header to sort.
+        </p>
+        <p className={styles.colorDiscriminabilityScore}>
+          <strong>Color discriminability:</strong>{" "}
+          {data.evaluations.color_discriminability.score.toFixed(3)} / 1
+          <span> (higher is better; independent of ordering)</span>
         </p>
         <OrderingMetricsTable
           evaluations={data.evaluations}

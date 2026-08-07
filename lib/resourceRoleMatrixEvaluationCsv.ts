@@ -69,7 +69,7 @@ export function createEvaluationCsv(
         row.blockiness,
         row.row_fragmentation,
         row.column_fragmentation,
-        row.color_discriminability,
+        evaluations.color_discriminability.score,
       ]
         .map(escapeCsvValue)
         .join(",")
