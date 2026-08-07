@@ -16,7 +16,16 @@ type SortableColumn = keyof OrderingMetricsTableRow;
 
 const LABEL_COLUMNS: SortableColumn[] = ["ordering_key"];
 
+const COLUMN_LABELS: Partial<Record<SortableColumn, string>> = {
+  degree_order_agreement: "Degree-order agreement",
+};
+
 function formatColumnLabel(column: string): string {
+  const customLabel = COLUMN_LABELS[column as SortableColumn];
+  if (customLabel) {
+    return customLabel;
+  }
+
   return column
     .split("_")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))

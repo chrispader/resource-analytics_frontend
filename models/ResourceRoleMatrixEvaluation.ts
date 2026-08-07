@@ -30,7 +30,7 @@ export interface OrderingEvaluation {
   seed: number | null;
   row_coherence: number;
   column_coherence: number;
-  blockiness: number;
+  degree_order_agreement: number;
   row_fragmentation: number;
   column_fragmentation: number;
 }
@@ -109,7 +109,7 @@ export interface PlotlyHeuristicReport {
 export const ORDERING_METRIC_COLUMNS = [
   "row_coherence",
   "column_coherence",
-  "blockiness",
+  "degree_order_agreement",
   "row_fragmentation",
   "column_fragmentation",
 ] as const satisfies readonly (keyof OrderingEvaluation)[];

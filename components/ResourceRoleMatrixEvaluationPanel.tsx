@@ -129,7 +129,10 @@ export default function ResourceRoleMatrixEvaluationPanel({
         </div>
         <p className={styles.evaluationSectionHint}>
           More saturated cells indicate better quality. For fragmentation,
-          lower values are better. Click a column header to sort.
+          lower values are better. Degree-order agreement is the share of
+          unequal-degree resource pairs where the resource with more roles
+          appears first; higher values are better. Click a column header to
+          sort.
         </p>
         <p className={styles.colorDiscriminabilityScore}>
           <strong>Color discriminability:</strong>{" "}
