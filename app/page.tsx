@@ -38,6 +38,7 @@ export default function Home() {
 
   const [runOnboardingTutorial, setRunOnboardingTutorial] = useState(false);
   const [eventlogUploaded, setEventlogUploaded] = useState(false);
+  const [eventLogFileName, setEventLogFileName] = useState("");
   const [analysisSelected, setAnalysisSelected] = useState(false);
   const [analysisPanelControl, setAnalysisPanelControl] = useState(true);
   const [firstSelectedAnalysis, setFirstSelectedAnalysis] =
@@ -168,6 +169,11 @@ export default function Home() {
       );
       const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to upload event log");
+      }
+
+      setEventLogFileName(file.name);
       setEventlogUploaded(true);
       setMetaData(data.table);
       setDropdownOptions({
@@ -318,7 +324,7 @@ export default function Home() {
             id="processOverviewPanel"
             className={`${styles.leftPanel} ${
               showProcessOverview ? "" : styles.leftPanelHidden
-            }`}
+            } ${showUploadMenue ? styles.uploadPanel : ""}`}
             hidden={!showProcessOverview}
             aria-label="Process overview"
           >
@@ -343,20 +349,35 @@ export default function Home() {
               </div>
             )}
           </aside>
-          {metaData.length > 0 && (
+          {metaData.length > 0 && !showUploadMenue && (
             <div
               className={`${styles.rightPanel} ${
                 showProcessOverview ? "" : styles.rightPanelExpanded
               }`}
               aria-label="Analysis panels"
+              style={{
+                flex: showProcessOverview ? "0 0 70%" : "1 1 0",
+                maxWidth: showProcessOverview ? "70%" : "100%",
+              }}
             >
               {analysisInstances.map((panelId, idx) => (
                 <div
                   key={panelId}
                   className={styles.rightPanelElement}
-                  style={{
-                    maxWidth: analysisInstances.length > 1 ? "850px" : "none",
-                  }}
+                  style={
+                    analysisInstances.length > 1
+                      ? {
+                          flex: "0 0 850px",
+                          width: "850px",
+                          maxWidth: "850px",
+                          minWidth: 0,
+                        }
+                      : {
+                          flex: "1 1 0",
+                          maxWidth: "100%",
+                          minWidth: 0,
+                        }
+                  }
                 >
                   <AnalysisPanel
                     // Only the first panel is controlled
@@ -376,6 +397,7 @@ export default function Home() {
                     }
                     setNodeSelectData={setNodeSelectData}
                     initialPanelId={initialPanelId}
+                    eventLogFileName={eventLogFileName}
                   />
                 </div>
               ))}

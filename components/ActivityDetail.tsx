@@ -17,7 +17,10 @@ const ActivityDetail = ({ nodeSelectData }: ActivityDetailProps) => {
   useEffect(() => {
     if (nodeSelectData?.plot) {
       try {
-        const parsed = JSON.parse(nodeSelectData.plot);
+        const parsed =
+          typeof nodeSelectData.plot === "string"
+            ? JSON.parse(nodeSelectData.plot)
+            : nodeSelectData.plot;
         setParsedPlot(parsed);
       } catch (err) {
         console.error("Failed to parse plot JSON:", err);

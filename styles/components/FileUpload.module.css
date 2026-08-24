@@ -3,10 +3,62 @@
 }
 
 .fileUpload {
+  container: file-upload / inline-size;
+  box-sizing: border-box;
+  width: calc(100% - 10px);
+  min-width: 0;
   padding: 10px;
   background-color: #f6f6f6;
   margin: 5px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.fileUpload p {
+  margin-bottom: 10px;
+}
+
+.uploadActions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.fileSelection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fileName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uploadButton {
+  align-self: stretch;
+}
+
+@container file-upload (min-width: 420px) {
+  .uploadActions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .fileSelection {
+    flex: 1 1 auto;
+  }
+
+  .uploadButton {
+    flex: 0 0 auto;
+    align-self: auto;
+  }
 }
