@@ -19,11 +19,19 @@ nr dev
 
 Open `http://localhost:3000`. The current frontend sends its API requests to `http://localhost:9090`.
 
+## Programmatic evaluation interface
+
+On the `feat/evaluation-suite` branch, select **Resource-Role Matrix Evaluation** from the analysis menu. The interface shows the matrix-based quality metrics, the Plotly heuristic findings, and a side-by-side comparison of ordering variants. Results can also be exported as CSV.
+
+Use the evaluation branch together with the backend branch of the same name. The backend calculates the metrics and heuristics; the frontend only presents the returned results.
+
 ## Main files
 
 - `app/page.tsx` contains the main application layout and event-log upload flow.
 - `components/AnalysisDropdown.tsx` lists the available analyses.
 - `components/AnalysisPanel.tsx` loads and displays the selected analysis.
+- `components/ResourceRoleMatrixEvaluationPanel.tsx` displays the evaluation results.
+- `components/PlotlyHeuristicFindings.tsx` displays the heuristic report.
 - `models/AnalysisData.ts` defines the data received from the backend.
 - `styles/components/` contains the component styles.
 
