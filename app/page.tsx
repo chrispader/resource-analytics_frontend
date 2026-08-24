@@ -38,6 +38,7 @@ export default function Home() {
 
   const [runOnboardingTutorial, setRunOnboardingTutorial] = useState(false);
   const [eventlogUploaded, setEventlogUploaded] = useState(false);
+  const [eventLogFileName, setEventLogFileName] = useState("");
   const [analysisSelected, setAnalysisSelected] = useState(false);
   const [analysisPanelControl, setAnalysisPanelControl] = useState(true);
   const [firstSelectedAnalysis, setFirstSelectedAnalysis] =
@@ -168,6 +169,11 @@ export default function Home() {
       );
       const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to upload event log");
+      }
+
+      setEventLogFileName(file.name);
       setEventlogUploaded(true);
       setMetaData(data.table);
       setDropdownOptions({
@@ -250,16 +256,36 @@ export default function Home() {
       <div className={styles.placeholder}>
         <div className={styles.layoutNavigation}>
           <div className={styles.alignLeft}>
-            <button
-              onClick={() => setShowProcessOverview(!showProcessOverview)}
-              className={`btn btn-primary btn-sm ${styles.buttonElement} processOverviewButton`}
-            >
-              {showProcessOverview ? (
-                <i className="bi bi-arrow-bar-left"></i>
-              ) : (
-                <i className="bi bi-arrow-bar-right"></i>
-              )}
-            </button>
+            {metaData.length > 0 && !showUploadMenue && (
+              <button
+                type="button"
+                onClick={() =>
+                  setShowProcessOverview((isVisible) => !isVisible)
+                }
+                className={`btn btn-primary btn-sm ${styles.buttonElement} ${styles.processOverviewToggle} processOverviewButton`}
+                aria-controls="processOverviewPanel"
+                aria-expanded={showProcessOverview}
+                title={
+                  showProcessOverview
+                    ? "Hide process overview"
+                    : "Show process overview"
+                }
+              >
+                <i
+                  className={`bi ${
+                    showProcessOverview
+                      ? "bi-layout-sidebar-inset"
+                      : "bi-layout-sidebar"
+                  }`}
+                  aria-hidden="true"
+                ></i>
+                <span>
+                  {showProcessOverview
+                    ? "Hide process overview"
+                    : "Show process overview"}
+                </span>
+              </button>
+            )}
             {showProcessOverview && !showUploadMenue && (
               <button
                 onClick={() => {
@@ -294,42 +320,64 @@ export default function Home() {
         </div>
 
         <div className={styles.container}>
-          {showProcessOverview && (
-            <div className={styles.leftPanel}>
-              {metaData.length > 0 && !showUploadMenue ? (
-                <DataTable data={metaData} />
-              ) : (
-                <FileUpload onUpload={handleUpload} />
-              )}
-              {flowNodes.length > 0 && initialPanelId && (
-                <div id="interactiveGraph">
-                  <ReactFlowProvider>
-                    <ReactFlowChart
-                      panelId={initialPanelId}
-                      initialNodes={flowNodes}
-                      initialEdges={flowEdges}
-                      onNodeSelect={handleNodeSelect}
-                      selectedAnalysis={firstSelectedAnalysis}
-                      colorMappings={colorMappings}
-                      activityUtilization={activityUtilization}
-                    />
-                  </ReactFlowProvider>
-                </div>
-              )}
-            </div>
-          )}
-          {metaData.length > 0 && (
+          <aside
+            id="processOverviewPanel"
+            className={`${styles.leftPanel} ${
+              showProcessOverview ? "" : styles.leftPanelHidden
+            } ${showUploadMenue ? styles.uploadPanel : ""}`}
+            hidden={!showProcessOverview}
+            aria-label="Process overview"
+          >
+            {metaData.length > 0 && !showUploadMenue ? (
+              <DataTable data={metaData} />
+            ) : (
+              <FileUpload onUpload={handleUpload} />
+            )}
+            {flowNodes.length > 0 && initialPanelId && (
+              <div id="interactiveGraph">
+                <ReactFlowProvider>
+                  <ReactFlowChart
+                    panelId={initialPanelId}
+                    initialNodes={flowNodes}
+                    initialEdges={flowEdges}
+                    onNodeSelect={handleNodeSelect}
+                    selectedAnalysis={firstSelectedAnalysis}
+                    colorMappings={colorMappings}
+                    activityUtilization={activityUtilization}
+                  />
+                </ReactFlowProvider>
+              </div>
+            )}
+          </aside>
+          {metaData.length > 0 && !showUploadMenue && (
             <div
-              className={styles.rightPanel}
-              style={{ width: showProcessOverview ? "70%" : "100%" }}
+              className={`${styles.rightPanel} ${
+                showProcessOverview ? "" : styles.rightPanelExpanded
+              }`}
+              aria-label="Analysis panels"
+              style={{
+                flex: showProcessOverview ? "0 0 70%" : "1 1 0",
+                maxWidth: showProcessOverview ? "70%" : "100%",
+              }}
             >
               {analysisInstances.map((panelId, idx) => (
                 <div
                   key={panelId}
                   className={styles.rightPanelElement}
-                  style={{
-                    maxWidth: analysisInstances.length > 1 ? "850px" : "none",
-                  }}
+                  style={
+                    analysisInstances.length > 1
+                      ? {
+                          flex: "0 0 850px",
+                          width: "850px",
+                          maxWidth: "850px",
+                          minWidth: 0,
+                        }
+                      : {
+                          flex: "1 1 0",
+                          maxWidth: "100%",
+                          minWidth: 0,
+                        }
+                  }
                 >
                   <AnalysisPanel
                     // Only the first panel is controlled
@@ -349,6 +397,7 @@ export default function Home() {
                     }
                     setNodeSelectData={setNodeSelectData}
                     initialPanelId={initialPanelId}
+                    eventLogFileName={eventLogFileName}
                   />
                 </div>
               ))}

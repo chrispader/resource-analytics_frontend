@@ -2,8 +2,12 @@ import { useState } from "react";
 import AnalysisDropdown from "./AnalysisDropdown";
 import InfoPanel from "./InfoPanel";
 import AnalysisDropdownContent from "./AnalysisDropdownContent";
+import ResourceRoleMatrixEvaluationPanel from "./ResourceRoleMatrixEvaluationPanel";
+import panelStyles from "../styles/components/AnalysisPanel.module.css";
 import styles from "../styles/components/Home.module.css";
 import { AnalysisData } from "../models/AnalysisData";
+
+const RESOURCE_ROLE_MATRIX_EVALUATION = "resource_role_matrix_evaluation";
 
 interface AnalysisPanelProps {
   panelId: string;
@@ -21,6 +25,7 @@ interface AnalysisPanelProps {
   setAnalysisPanelControl: (analysisPanelControl: boolean) => void;
   selectedAnalysis?: string; // made optional
   setSelectedAnalysis?: (analysis: string) => void; // made optional
+  eventLogFileName: string;
 }
 
 export default function AnalysisPanel({
@@ -34,6 +39,7 @@ export default function AnalysisPanel({
   setAnalysisPanelControl,
   selectedAnalysis,
   setSelectedAnalysis,
+  eventLogFileName,
 }: AnalysisPanelProps) {
   const [dropdownOptions] = useState(initialDropdownOptions);
 
@@ -57,6 +63,9 @@ export default function AnalysisPanel({
   const [initialHeaders, setInitialHeaders] = useState<string[]>([]);
   const [selectedHeaders, setSelectedHeaders] = useState<string[]>([]);
 
+  const isMatrixEvaluation =
+    analysisValue === RESOURCE_ROLE_MATRIX_EVALUATION;
+
   return (
     <div className={`${styles.rounded} ${styles.rightPanel}`}>
       <AnalysisDropdown
@@ -73,6 +82,21 @@ export default function AnalysisPanel({
         initialPanelId={initialPanelId}
       />
       <InfoPanel selectedAnalysis={analysisValue} />
+      {isMatrixEvaluation && (
+        <section
+          id="resourceRoleMatrixEvaluationPanel"
+          className={panelStyles.evaluationPanel}
+          aria-label="Resource role matrix evaluation output"
+        >
+          <p className={panelStyles.evaluationTitle}>
+            Resource-Role Matrix Evaluation
+          </p>
+          <ResourceRoleMatrixEvaluationPanel
+            data={data}
+            eventLogFileName={eventLogFileName}
+          />
+        </section>
+      )}
       <AnalysisDropdownContent
         panelId={panelId}
         selectedAnalysis={analysisValue}

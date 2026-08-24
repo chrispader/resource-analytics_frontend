@@ -19,10 +19,13 @@ export default function FileUpload({ onUpload }: FileUploadProps) {
   };
 
   return (
-    <div id="uploadEventLogButton" className={`${styles.rounded} ${styles.fileUpload}`}>
+    <div
+      id="uploadEventLogButton"
+      className={`${styles.rounded} ${styles.fileUpload}`}
+    >
       <p>Upload an event log</p>
-      <div className="d-flex justify-content-between align-items-center w-100">
-        <div className="d-flex align-items-center">
+      <div className={styles.uploadActions}>
+        <div className={styles.fileSelection}>
           <input
             type="file"
             id="fileInput"
@@ -32,11 +35,13 @@ export default function FileUpload({ onUpload }: FileUploadProps) {
           <label htmlFor="fileInput" className="btn btn-primary">
             Choose File
           </label>
-          <span className="ms-2">{file ? file.name : "No file chosen"}</span>
+          <span className={styles.fileName}>
+            {file ? file.name : "No file chosen"}
+          </span>
         </div>
         <button
           id="fetchButton"
-          className="btn btn-primary"
+          className={`btn btn-primary ${styles.uploadButton}`}
           onClick={handleUpload}
           disabled={!file}
         >

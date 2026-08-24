@@ -55,10 +55,19 @@ const options = [
     value: "activity_resource_comparison_norm",
     label: "Duration per Activity and Resource (Heatmap)",
   },
+  {
+    value: "normalized_activity_resource_duration_matrix",
+    label: "Normalized Average Case Duration per Activity and Resource",
+  },
   { value: "", label: "Workload Distribution", disabled: true },
   { value: "resource_role_time_distribution", label: "Role by Resource" },
   { value: "resource_time_distribution", label: "Activity by Resource" },
   { value: "role_time_distribution", label: "Activity by Role" },
+  { value: "resource_role_matrix", label: "Resource-Role Matrix" },
+  {
+    value: "resource_role_matrix_evaluation",
+    label: "Resource-Role Matrix Evaluation",
+  },
   { value: "", label: "Capacity Utilization", disabled: true },
   {
     value: "capacity_utilization_resource",
@@ -246,7 +255,7 @@ export default function AnalysisDropdown({
             }}
           />
         </div>
-      </div> 
+      </div>
     </div>
   );
 }
